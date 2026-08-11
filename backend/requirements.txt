@@ -1,2 +1,6 @@
-fastapi
+fastapi[standard]>=0.141.1
 uvicorn
+google-genai>=2.17.0
+python-dotenv>=1.2.2
+slowapi>=0.1.10
+supabase>=2.31.0
