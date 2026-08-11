@@ -160,7 +160,11 @@ export default function Chat() {
           {!sessionId ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-3 px-6 text-center">
               <p className="text-sm text-ink/60">
-                Enter the username you were given to start chatting.
+                This chat function is for Recruiters and Hiring Managers.
+                To chat enter the Company Name and Date I applied to your company.
+              </p>
+              <p className="text-sm text-ink/60">
+                Example: Aecon October 2023 = "Aecon1023".
               </p>
               <form onSubmit={submitUsername} className="flex w-full flex-col gap-2">
                 <input
