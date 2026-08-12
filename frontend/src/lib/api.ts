@@ -6,6 +6,10 @@ export type CreateSessionResult =
   | { ok: true; sessionId: string }
   | { ok: false; reason: "not_found" | "error" | string };
 
+export async function checkHealth(): Promise<void> {
+  await fetch(`${API_BASE_URL}/health`).catch(() => {});
+}
+
 export async function createChatSession(userId: string): Promise<CreateSessionResult> {
   const res = await fetch(`${API_BASE_URL}/chat/new`, {
     method: "POST",

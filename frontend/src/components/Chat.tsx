@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
-import { createChatSession, streamChatMessage } from "../lib/api";
+import { checkHealth, createChatSession, streamChatMessage } from "../lib/api";
 import { profile } from "../data/profile";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -101,6 +101,10 @@ export default function Chat() {
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, isStreaming]);
+
+  useEffect(() => {
+    checkHealth();
+  }, []);
 
   function submitUsername(e: React.FormEvent) {
     e.preventDefault();
