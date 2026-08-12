@@ -130,6 +130,14 @@ export default function Chat() {
             next[next.length - 1] = { role: "assistant", content: assistantText };
             return next;
           });
+        } else if ("error" in event) {
+          if (event.error === "rate_limited") {
+            setError("The AI assistant is getting a lot of use right now. Please try again in a minute.");
+          } else if (event.error === "stream_interrupted") {
+            setError("The response was interrupted. Please try again.");
+          } else {
+            setError("Something went wrong. Please try again.");
+          }
         }
       }
     } catch {

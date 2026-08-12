@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from google.genai.errors import APIError
 from db import *
 from llm import get_llm_response
 
@@ -75,6 +76,10 @@ async def chat(request: Request, chat_message: ChatMessage, session_id: str):
             async for chunk in get_llm_response(session_id, session["user_id"], chat_message.content):
                 llm_text += chunk
                 yield f"data: {json.dumps({'delta': chunk})}\n\n"
+        except APIError as e:
+            print(f"[event_stream error] {e}")
+            error_code = "rate_limited" if e.code == 429 else "stream_interrupted"
+            yield f"data: {json.dumps({'error': error_code})}\n\n"
         except Exception as e:
             print(f"[event_stream error] {e}")
             yield f"data: {json.dumps({'error': 'stream_interrupted'})}\n\n"

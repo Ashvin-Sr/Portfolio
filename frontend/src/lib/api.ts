@@ -1,6 +1,6 @@
 export const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
 
-export type ChatEvent = { delta: string } | { done: true };
+export type ChatEvent = { delta: string } | { error: string } | { done: true };
 
 export type CreateSessionResult =
   | { ok: true; sessionId: string }
