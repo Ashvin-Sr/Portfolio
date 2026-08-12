@@ -144,8 +144,12 @@ export default function Chat() {
           }
         }
       }
-    } catch {
-      setError("Something went wrong sending that message. Please try again.");
+    } catch (e) {
+      setError(
+        e instanceof Error && e.message
+          ? e.message
+          : "Something went wrong sending that message. Please try again.",
+      );
     } finally {
       setIsStreaming(false);
     }

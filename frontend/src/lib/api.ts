@@ -42,7 +42,11 @@ export async function* streamChatMessage(
   });
 
   if (!res.ok || !res.body) {
-    throw new Error(`Chat request failed with status ${res.status}`);
+    const message = await res
+      .json()
+      .then((data) => data.detail || data.error)
+      .catch(() => null);
+    throw new Error(message || `Chat request failed with status ${res.status}`);
   }
 
   const reader = res.body.getReader();
