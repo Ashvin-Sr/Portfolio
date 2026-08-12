@@ -54,5 +54,12 @@ async def get_llm_response(session_id: str, user_id: str, message: str):
     )
 
     async for chunk in stream:
-        if chunk.text:
-            yield chunk.text
+        try:
+            if chunk.text:
+                yield chunk.text
+        except Exception as e:
+            reason = None
+            if chunk.candidates:
+                reason = chunk.candidates[0].finish_reason
+            print(f"[stream error] {e} | finish_reason={reason}")
+            break

@@ -71,11 +71,17 @@ async def chat(request: Request, chat_message: ChatMessage, session_id: str):
 
     async def event_stream():
         llm_text = ""
-        async for chunk in get_llm_response(session_id, session["user_id"], chat_message.content):
-            llm_text += chunk
-            yield f"data: {json.dumps({'delta': chunk})}\n\n"
-        add_message_db(session_id, "model", llm_text)
-        yield f"data: {json.dumps({'done': True})}\n\n"
+        try:
+            async for chunk in get_llm_response(session_id, session["user_id"], chat_message.content):
+                llm_text += chunk
+                yield f"data: {json.dumps({'delta': chunk})}\n\n"
+        except Exception as e:
+            print(f"[event_stream error] {e}")
+            yield f"data: {json.dumps({'error': 'stream_interrupted'})}\n\n"
+        finally:
+            if llm_text:
+                add_message_db(session_id, "model", llm_text)
+            yield f"data: {json.dumps({'done': True})}\n\n"
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
