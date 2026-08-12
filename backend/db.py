@@ -25,12 +25,12 @@ def get_messages_db(session_id: str):
     return response.data if response.data else []
 
 def get_user_db(user_id: str):
-    response = supabase.table("users").select("*").eq("user_id", user_id).limit(1).execute()
+    response = supabase.table("users").select("*").ilike("user_id", user_id).limit(1).execute()
     return response.data[0] if response.data else None
 
 def increment_user_count_db(user_id: str, requestsCount: int):
     user = get_user_db(user_id)
     if user:
-        response = supabase.table("users").update({"requests": requestsCount + 1}).eq("user_id", user_id).execute()
+        response = supabase.table("users").update({"requests": requestsCount + 1}).ilike("user_id", user_id).execute()
         return response.data[0] if response.data else None
     return None
